@@ -8,19 +8,20 @@
 </head>
 
 <body>
-    <form method="POST" action="/listings">
-        <input type="text" name="title" placeholder="enter title" />
-        <br>
-        <textarea name="description" placeholder="enter description"> </textarea>
-        <br>
-        <input type="text" name="image" placeholder="enter URL/Link" />
-        <br>
-        <input type="number" name="price" placeholder="enter price" />
-        <br>
-        <input type="text" name="country" placeholder="enter country" />
-        <br>
-        <input type="text" name="location" placeholder="enter Location" />
-        <br>
+    <h3>Create a New Listing</h3>
+    <form>
+        <input type="text" name="listing[title]" placeholder="enter title" />
+        <br><br>
+        <textarea name="listing[description]" placeholder="enter description"> </textarea>
+        <br><br>
+        <input type="text" name="listing[image]" placeholder="enter URL/Link" />
+        <br><br>
+        <input type="number" name="listing[price]" placeholder="enter price" />
+        <br><br>
+        <input type="text" name="listing[country]" placeholder="enter country" />
+        <br><br>
+        <input type="text" name="listing[location]" placeholder="enter Location" />
+        <br><br>
 
         <button>Add</button>
     </form>
