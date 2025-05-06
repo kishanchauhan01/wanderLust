@@ -6,6 +6,8 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    padding: 0;
+    margin: 0;
 }
 
 .container {
@@ -59,6 +61,8 @@ body {
     flex-wrap: wrap;
     justify-content: center;
     align-items: space-evenly;
+    margin-bottom: 0;
+    /* flex: 1; */
 }
 
 /* Cards  */
