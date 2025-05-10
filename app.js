@@ -1,17 +1,16 @@
 const express = require("express");
 const app = express();
-const mongoose = require("mongoose");
-const Listing = require("./models/listing.js");
 const connectDB = require("./connectDB.js");
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
-const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
-const { listingSchema, reviewSchema } = require("./schema.js");
-const Review = require("./models/review.js");
 const listings = require("./routes/listing.js");
+const reviews = require("./routes/reviews.js");
+const session = require("express-session");
+const flash = require("connect-flash");
 
+//All config & middleware
 connectDB()
   .then(() => {
     console.log("db connected!!!");
@@ -28,64 +27,45 @@ app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
 
-
-
-const validateReview = (req, res, next) => {
-  let { error } = reviewSchema.validate(req.body);
-  if (error) {
-    throw new ExpressError(400, error);
-  } else {
-    next();
-  }
+const sessionOption = {
+  secret: "f3!@9g$2Kls8*vnQx1#Wz7Jp^kishan@4Nm",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
+  },
 };
 
+//All routes
 app.get("/", (req, res) => {
-  res.send("hi hello");
+  return res.send("hi hello");
+});
+
+app.use(session(sessionOption));
+app.use(flash());
+
+app.use((req, res, next) => {
+  res.locals.success = req.flash("successMsg");
+  res.locals.error = req.flash("errorMsg");
+  return next();
 });
 
 app.use("/listings", listings);
-
-//Reviews
-//Post route for adding reviews
-app.post(
-  "/listings/:id/reviews",
-  validateReview,
-  wrapAsync(async (req, res) => {
-    let listing = await Listing.findById(req.params.id);
-    let newReview = new Review(req.body.review);
-
-    listing.reviews.push(newReview);
-
-    await newReview.save();
-    await listing.save();
-    // console.log("new review saved");
-    res.redirect(`/listings/${listing._id}`);
-  })
-);
-
-//Delete review route
-app.delete(
-  "/listings/:id/reviews/:reviewId",
-  wrapAsync(async (req, res) => {
-    let { id, reviewId } = req.params;
-    await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
-    await Review.findByIdAndDelete(reviewId);
-
-    res.redirect(`/listings/${id}`);
-  })
-);
+app.use("/listings/:id/reviews", reviews);
 
 app.all(/.*/, (req, res, next) => {
-  next(new ExpressError(404, "Page not found"));
+  return next(new ExpressError(404, "Page not found"));
 });
 
 //Error middleware
 app.use((err, req, res, next) => {
   let { statusCode = 500, message = "Something went wrong" } = err;
-  res.status(statusCode).render("error.ejs", { statusCode, message });
+  return res.status(statusCode).render("error.ejs", { statusCode, message });
   // res.status(statusCode).send(message);
 });
 
 app.listen(8080, () => {
-  console.log(`server is listing to http://localhost:${8080}`);
+  return console.log(`server is listing to http://localhost:${8080}`);
 });
