@@ -1,6 +1,5 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
-const Review = require("./review.js");
+import mongoose, { Schema } from "mongoose";
+import { Review } from "./review.model.js";
 
 const listingSchema = new Schema({
   title: {
@@ -34,5 +33,4 @@ listingSchema.post("findOneAndDelete", async (listing) => {
   }
 });
 
-const Listing = mongoose.model("Listing", listingSchema);
-module.exports = Listing;
+export const Listing = mongoose.model("Listing", listingSchema);

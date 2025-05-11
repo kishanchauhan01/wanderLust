@@ -1,24 +1,21 @@
-const express = require("express");
+import express from "express";
+import path from "path"; 
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+import methodOverride from "method-override";
+import ejsMate from "ejs-mate";
+import session from "express-session";
+import flash from "connect-flash";
+import listingsRouter from "./routes/listing.route.js";
+import reviewsRouter from "./routes/reviews.route.js";
+import ExpressError from "./utils/ExpressError.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const app = express();
-const connectDB = require("./connectDB.js");
-const path = require("path");
-const methodOverride = require("method-override");
-const ejsMate = require("ejs-mate");
-const ExpressError = require("./utils/ExpressError.js");
-const listings = require("./routes/listing.js");
-const reviews = require("./routes/reviews.js");
-const session = require("express-session");
-const flash = require("connect-flash");
 
 //All config & middleware
-connectDB()
-  .then(() => {
-    console.log("db connected!!!");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
-
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
@@ -52,8 +49,8 @@ app.use((req, res, next) => {
   return next();
 });
 
-app.use("/listings", listings);
-app.use("/listings/:id/reviews", reviews);
+app.use("/listings", listingsRouter);
+app.use("/listings/:id/reviews", reviewsRouter);
 
 app.all(/.*/, (req, res, next) => {
   return next(new ExpressError(404, "Page not found"));
@@ -66,6 +63,4 @@ app.use((err, req, res, next) => {
   // res.status(statusCode).send(message);
 });
 
-app.listen(8080, () => {
-  return console.log(`server is listing to http://localhost:${8080}`);
-});
+export { app };

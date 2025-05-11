@@ -2,9 +2,9 @@
   "name": "wonderlust",
   "version": "1.0.0",
   "main": "app.js",
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
-    "dev": "nodemon app.js",
+    "dev": "nodemon index.js",
     "server": "nodemon ./server/server.js"
   },
   "author": "kishan",
