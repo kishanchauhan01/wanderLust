@@ -1,14 +1,15 @@
 import express from "express";
-import path from "path"; 
+import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import methodOverride from "method-override";
 import ejsMate from "ejs-mate";
 import session from "express-session";
 import flash from "connect-flash";
-import listingsRouter from "./routes/listing.route.js";
-import reviewsRouter from "./routes/reviews.route.js";
 import ExpressError from "./utils/ExpressError.js";
+import passport from "passport";
+import LocalStrategy from "passport-local";
+import { User } from "./models/user.model.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -35,22 +36,46 @@ const sessionOption = {
   },
 };
 
+app.use(session(sessionOption));
+app.use(flash());
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+app.use((req, res, next) => {
+  res.locals.success = req.flash("successMsg");
+  res.locals.error = req.flash("error")
+  res.locals.currUser = req.user;
+
+  return next();
+});
+
+//Routes import
+import listingsRouter from "./routes/listing.route.js";
+import reviewsRouter from "./routes/reviews.route.js";
+import userRouter from "./routes/user.route.js";
+
 //All routes
 app.get("/", (req, res) => {
   return res.send("hi hello");
 });
 
-app.use(session(sessionOption));
-app.use(flash());
-
-app.use((req, res, next) => {
-  res.locals.success = req.flash("successMsg");
-  res.locals.error = req.flash("errorMsg");
-  return next();
+app.get("/demouser", async (req, res) => {
+  let fakeUser = new User({
+    email: "kishanchauhan2006.25@gmail.com",
+    username: "kishan",
+  });
+  let registerUser = await User.register(fakeUser, "helloUser");
+  res.send(registerUser);
 });
 
 app.use("/listings", listingsRouter);
 app.use("/listings/:id/reviews", reviewsRouter);
+app.use("/", userRouter);
 
 app.all(/.*/, (req, res, next) => {
   return next(new ExpressError(404, "Page not found"));
@@ -64,3 +89,6 @@ app.use((err, req, res, next) => {
 });
 
 export { app };
+
+// login
+// singup

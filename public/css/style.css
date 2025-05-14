@@ -1,17 +1,14 @@
 body {
     font-family: "Plus Jakarta Sans", sans-serif !important;
-    /* font-optical-sizing: auto;
-    font-weight: <weight>;
-    font-style: normal; */
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    padding: 0;
-    margin: 0;
+    /* padding: 0;
+    margin: 0; */
 }
 
 .container {
-    flex: 1;
+    flex: 1 !important;
 }
 
 .navbar {
@@ -54,15 +51,14 @@ body {
 }
 
 .f-info {
+    /* width: 100%; */
     text-align: center;
     height: 8rem;
     background-color: #ebebeb;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: wrap; 
     justify-content: center;
-    align-items: space-evenly;
-    margin-bottom: 0;
-    /* flex: 1; */
+    align-items: flex-end;
 }
 
 /* Cards  */

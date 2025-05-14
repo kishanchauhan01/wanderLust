@@ -1,6 +1,6 @@
 <% layout("/layouts/boilerplate") %>
 
-<body>
+
   <div class="row mt-2">
     <div class="col-8 offset-2">
       <br><br>
@@ -9,6 +9,9 @@
         <div class="mb-3">
           <label for="title" class="form-label">Titile</label>
           <input type="text" name="listing[title]" value="<%= listing.title %>" class="form-control" required />
+          <div class="invalid-feedback">
+            Please enter a Title
+          </div>
         </div>
 
         <div class="mb-3">
@@ -60,4 +63,3 @@
       </form>
     </div>
   </div>
-</body>

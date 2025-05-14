@@ -15,7 +15,7 @@ const addReview = wrapAsync(async (req, res) => {
     if (await listing.save()) {
       req.flash("successMsg", "Review is added!");
     } else {
-      req.flash("errorMsg", "Review is not added, try again");
+      req.flash("error", "Review is not added, try again");
     }
   }
   // console.log("new review saved");
@@ -29,7 +29,7 @@ const deleteReview = wrapAsync(async (req, res) => {
   if (deletedReview) {
     req.flash("successMsg", "Review deleted!");
   } else {
-    req.flash("errorMsg", "Review is not deleted, try again!");
+    req.flash("error", "Review is not deleted, try again!");
   }
 
   return res.redirect(`/listings/${id}`);
