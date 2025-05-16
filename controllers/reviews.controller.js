@@ -6,11 +6,9 @@ const addReview = wrapAsync(async (req, res) => {
   let listing = await Listing.findById(req.params.id);
   let newReview = new Review(req.body.review);
 
-  console.log(req.params);
+  newReview.author = req.user._id;
   listing.reviews.push(newReview);
 
-  // await newReview.save();
-  // await listing.save();
   if (await newReview.save()) {
     if (await listing.save()) {
       req.flash("successMsg", "Review is added!");
@@ -18,7 +16,7 @@ const addReview = wrapAsync(async (req, res) => {
       req.flash("error", "Review is not added, try again");
     }
   }
-  // console.log("new review saved");
+  console.log(newReview);
   return res.redirect(`/listings/${listing._id}`);
 });
 

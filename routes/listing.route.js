@@ -10,6 +10,7 @@ import {
 } from "../controllers/listings.controller.js";
 import { validateListing } from "../middlewares/validateListing.middleware.js";
 import { isLoggedIn } from "../middlewares/isLoggedIn.middleware.js";
+import { isOwner } from "../middlewares/isOwner.middleware.js";
 
 const router = Router();
 
@@ -26,12 +27,12 @@ router.route("/:id").get(showListing);
 router.route("/").post(isLoggedIn, validateListing, createListing);
 
 //Edit Route
-router.route("/:id/edit").get(isLoggedIn, editListing);
+router.route("/:id/edit").get(isLoggedIn, isOwner, editListing);
 
 //Update Route
-router.route("/:id").put(isLoggedIn, validateListing, updateListing);
+router.route("/:id").put(isLoggedIn, isOwner, validateListing, updateListing);
 
 //Delete Route
-router.route("/:id").delete(isLoggedIn, deleteListing);
+router.route("/:id").delete(isLoggedIn, isOwner, deleteListing);
 
 export default router;

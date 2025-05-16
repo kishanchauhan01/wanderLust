@@ -1,5 +1,6 @@
 import wrapAsync from "../utils/wrapAsync.js";
 import { User } from "../models/user.model.js";
+import { saveRedirectUrl } from "../middlewares/isLoggedIn.middleware.js";
 
 const signupForm = (_, res) => {
   return res.render("user/signup.ejs");
@@ -31,7 +32,8 @@ const loginForm = (_, res) => {
 
 const loginUser = wrapAsync(async (req, res) => {
   req.flash("successMsg", "Welcome back to WanderLust!");
-  res.redirect("/listings");
+  let redirectUrl = res.locals.redirectUrl || "/listings";
+  res.redirect(redirectUrl);
 });
 
 const logOut = (req, res) => {

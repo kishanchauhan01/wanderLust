@@ -291,4 +291,4 @@ const sampleListings = [
   },
 ];
 
-module.exports = { data: sampleListings };
+export default sampleListings;

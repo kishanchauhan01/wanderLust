@@ -7,6 +7,7 @@ import {
   logOut,
 } from "../controllers/user.controller.js";
 import passport from "passport";
+import { saveRedirectUrl } from "../middlewares/isLoggedIn.middleware.js";
 
 const router = Router({ mergeParams: true });
 
@@ -17,6 +18,7 @@ router.route("/signup").post(signupUser);
 //login
 router.route("/login").get(loginForm);
 router.route("/login").post(
+  saveRedirectUrl,
   passport.authenticate("local", {
     failureRedirect: "/login",
     failureFlash: true,

@@ -1,7 +1,6 @@
-const mongoose = require("mongoose");
-const initData = require("./data.js");
-const Listing = require("../models/listing.js");
-const connectDB = require("../connectDB.js");
+import initData from "./data.js";
+import { Listing } from "../models/listing.model.js";
+import connectDB from "../db/connectDB.js";
 
 connectDB()
   .then(() => {
@@ -13,7 +12,11 @@ connectDB()
 
 const initDB = async () => {
   await Listing.deleteMany({});
-  await Listing.insertMany(initData.data);
+  let newData = initData.map((obj) => ({
+    ...obj,
+    owner: "682440019b549aeb3c6cec4b",
+  }));
+  await Listing.insertMany(newData);
   console.log("data was initialized");
 };
 

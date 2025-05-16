@@ -1,10 +1,10 @@
 <% layout("/layouts/boilerplate") %>
 
   <h1>All listings</h1>
-  <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
+  <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-2">
 
     <% for(let listing of allListings) { %>
-    <a href="/listings/<%= listing._id %>" class="text-decoration-none">
+    <a href="/listings/<%= listing._id %>" class="text-decoration-none mx-5 mx-md-0">
       <div class="card col listing-card" style="width: 18rem;">
         <img src="<%= listing.image %>" class="card-img-top" alt="listing_img" style="height: 20rem;">
         <div class="card-img-overlay">

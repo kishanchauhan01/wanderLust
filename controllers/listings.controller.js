@@ -8,13 +8,19 @@ const allListings = wrapAsync(async (req, res) => {
 });
 
 const newListing = wrapAsync(async (req, res) => {
-  
   return res.render("listings/new.ejs");
 });
 
 const showListing = wrapAsync(async (req, res) => {
   let { id } = req.params;
-  const listing = await Listing.findById(id).populate("reviews");
+  const listing = await Listing.findById(id)
+    .populate({
+      path: "reviews",
+      populate: {
+        path: "author",
+      },
+    })
+    .populate("owner");
   if (!listing) {
     req.flash("error", "Listing you request for does not exist!");
     return res.redirect("/listings");
@@ -24,7 +30,8 @@ const showListing = wrapAsync(async (req, res) => {
 
 const createListing = wrapAsync(async (req, res) => {
   // let {title, descripttion, image, price, country, location} = req.body;
-  let newListing = new Listing(req.body.listing);
+  const newListing = new Listing(req.body.listing);
+  newListing.owner = req.user._id;
   if (await newListing.save()) {
     req.flash("successMsg", "New Listing Created!");
   } else {
@@ -45,6 +52,12 @@ const editListing = wrapAsync(async (req, res) => {
 
 const updateListing = wrapAsync(async (req, res) => {
   let { id } = req.params;
+  let listing = await Listing.findById(id);
+  if (res.locals.currUser && !listing.owner.equals(res.locals.currUser._id)) {
+    req.flash("error", "You don't have permission to edit");
+    return res.redirect(`/listings/${id}`);
+  }
+
   let updatedListing = await Listing.findByIdAndUpdate(id, {
     ...req.body.listing,
   });
