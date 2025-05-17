@@ -1,7 +1,7 @@
 {
   "name": "wonderlust",
   "version": "1.0.0",
-  "main": "app.js",
+  "main": "index.js",
   "type": "module",
   "scripts": {
     "dev": "nodemon index.js",
@@ -11,9 +11,11 @@
   "license": "ISC",
   "description": "Airbnb like project",
   "dependencies": {
+    "cloudinary": "^2.6.1",
     "connect-flash": "^0.1.1",
     "cookie-parse": "^0.4.0",
     "cookie-parser": "^1.4.7",
+    "dotenv": "^16.5.0",
     "ejs": "^3.1.10",
     "ejs-mate": "^4.0.0",
     "express": "^5.1.0",

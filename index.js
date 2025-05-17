@@ -1,5 +1,7 @@
+import "./loadEnv.js";
 import { app } from "./app.js";
 import connectDB from "./db/connectDB.js";
+
 
 connectDB()
   .then(() => {

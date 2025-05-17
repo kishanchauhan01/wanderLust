@@ -11,6 +11,7 @@ import {
 import { validateListing } from "../middlewares/validateListing.middleware.js";
 import { isLoggedIn } from "../middlewares/isLoggedIn.middleware.js";
 import { isOwner } from "../middlewares/isOwner.middleware.js";
+import { upload } from "../middlewares/multer.middleware.js";
 
 const router = Router();
 
@@ -24,13 +25,28 @@ router.route("/new").get(isLoggedIn, newListing);
 router.route("/:id").get(showListing);
 
 //Create Route
-router.route("/").post(isLoggedIn, validateListing, createListing);
+router
+  .route("/")
+  .post(
+    isLoggedIn,
+    validateListing,
+    upload.single("listing[image]"),
+    createListing
+  );
 
 //Edit Route
 router.route("/:id/edit").get(isLoggedIn, isOwner, editListing);
 
 //Update Route
-router.route("/:id").put(isLoggedIn, isOwner, validateListing, updateListing);
+router
+  .route("/:id")
+  .put(
+    isLoggedIn,
+    isOwner,
+    validateListing,
+    upload.single("listing[image]"),
+    updateListing
+  );
 
 //Delete Route
 router.route("/:id").delete(isLoggedIn, isOwner, deleteListing);

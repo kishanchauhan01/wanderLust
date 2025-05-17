@@ -11,6 +11,7 @@ import passport from "passport";
 import LocalStrategy from "passport-local";
 import { User } from "./models/user.model.js";
 
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -48,7 +49,7 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
   res.locals.success = req.flash("successMsg");
-  res.locals.error = req.flash("error")
+  res.locals.error = req.flash("error");
   res.locals.currUser = req.user;
 
   return next();

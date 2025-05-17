@@ -1,6 +1,9 @@
 import { Listing } from "../models/listing.model.js";
 import wrapAsync from "../utils/wrapAsync.js";
-// import passport from "passport";
+import {
+  deleteFromCloudinary,
+  uploadOnCloudinary,
+} from "../utils/cloudinary.js";
 
 const allListings = wrapAsync(async (req, res) => {
   const allListings = await Listing.find({});
@@ -29,9 +32,23 @@ const showListing = wrapAsync(async (req, res) => {
 });
 
 const createListing = wrapAsync(async (req, res) => {
-  // let {title, descripttion, image, price, country, location} = req.body;
+  // // let {title, descripttion, image, price, country, location} = req.body;
   const newListing = new Listing(req.body.listing);
+
+  //upload file to cloudinary
+  const cloudinaryUploadResult = await uploadOnCloudinary(req.file.path);
+  if (!cloudinaryUploadResult || !cloudinaryUploadResult.url) {
+    req.flash("error", "Failed to upload new image.");
+    return res.redirect("/listings");
+  }
+
   newListing.owner = req.user._id;
+  newListing.image = {
+    url: cloudinaryUploadResult.url,
+    public_id: cloudinaryUploadResult.public_id,
+    filename: cloudinaryUploadResult.filename,
+  };
+
   if (await newListing.save()) {
     req.flash("successMsg", "New Listing Created!");
   } else {
@@ -58,9 +75,42 @@ const updateListing = wrapAsync(async (req, res) => {
     return res.redirect(`/listings/${id}`);
   }
 
-  let updatedListing = await Listing.findByIdAndUpdate(id, {
+  let cloudinaryUploadResult = null;
+
+  // If new image is uploaded
+  if (req.file && req.file.path) {
+    // Delete old image from Cloudinary
+    const cloudinaryDeleteResult = await deleteFromCloudinary(
+      listing.image.public_id
+    );
+    if (!cloudinaryDeleteResult) {
+      req.flash("error", "Failed to delete old image from Cloudinary.");
+      return res.redirect(`/listings/${id}`);
+    }
+
+    // Upload new image
+    cloudinaryUploadResult = await uploadOnCloudinary(req.file.path);
+    if (!cloudinaryUploadResult || !cloudinaryUploadResult.url) {
+      req.flash("error", "Failed to upload new image.");
+      return res.redirect(`/listings/${id}`);
+    }
+  }
+
+  //creating new updatePayload
+  let updatePayload = {
     ...req.body.listing,
-  });
+  };
+
+  if (cloudinaryUploadResult) {
+    updatePayload.image = {
+      url: cloudinaryUploadResult.url,
+      public_id: cloudinaryUploadResult.public_id,
+      filename: cloudinaryUploadResult.filename,
+    };
+  }
+
+  let updatedListing = await Listing.findByIdAndUpdate(id, updatePayload);
+
   if (updatedListing) {
     req.flash("successMsg", "Listing updated!");
   } else {
