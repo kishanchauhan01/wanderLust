@@ -1,22 +1,19 @@
 <% layout("/layouts/boilerplate") %>
 
-<h1 class="mb-3 mt-2">Your nex <span style="color: #fe424d;">Home</span></h1>
-  <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-2">
+<h1 class="mb-3 mt-2">Your next <span style="color: #fe424d;">Home</span></h1>
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 g-3">
 
-    <% for(let listing of allListings) { %>
-    <a href="/listings/<%= listing._id %>" class="text-decoration-none mx-5 mx-md-0">
-      <div class="card col listing-card" style="width: 18rem;">
-        <img src="<%= listing.image.url %>" class="card-img-top" alt="listing_img" style="height: 20rem;">
-        <div class="card-img-overlay">
-
-        </div>
-        <div class="card-body">
-          <p class="card-text">
-            <b><%= listing.title %></b> <br>
-            &#8377 <%= listing.price.toLocaleString("en-IN") %> / night
-          </p>
-        </div>
+  <% for(let listing of allListings) { %>
+  <a href="/listings/<%= listing._id %>" class="text-decoration-none mx-md-0 p-3">
+    <div class="card col listing-card w-100" style="margin-right: 30px;">
+      <img src="<%= listing.image.url %>" class="card-img-top img-fluid" alt="listing_img" style="height: 20rem; object-fit: cover;">
+      <div class="card-body">
+        <p class="card-text">
+          <b><%= listing.title %></b> <br>
+          &#8377 <%= listing.price.toLocaleString("en-IN") %> / night
+        </p>
       </div>
-    </a>
-    <% } %>
-  </div>
+    </div>
+  </a>
+  <% } %>
+</div>

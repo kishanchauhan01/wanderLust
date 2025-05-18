@@ -8,7 +8,12 @@ body {
 }
 
 .container {
-    flex: 1 !important;
+    /* flex: 1 !important; */
+    margin-left: auto !important;
+    margin-right: auto !important;
+    max-width: 100% !important;
+    /* padding-left: 1rem !important;
+    padding-right: 1rem !important; */
 }
 
 .navbar {
@@ -56,7 +61,7 @@ body {
     height: 8rem;
     background-color: #ebebeb;
     display: flex;
-    flex-wrap: wrap; 
+    flex-wrap: wrap;
     justify-content: center;
     align-items: flex-end;
 }
@@ -101,7 +106,7 @@ body {
 /* show page  */
 
 .show-img {
-    height: 60vh; 
+    height: 60vh;
 }
 
 .btns {
