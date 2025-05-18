@@ -5,12 +5,13 @@ import { dirname } from "path";
 import methodOverride from "method-override";
 import ejsMate from "ejs-mate";
 import session from "express-session";
+import MongoStore from "connect-mongo";
 import flash from "connect-flash";
 import ExpressError from "./utils/ExpressError.js";
 import passport from "passport";
 import LocalStrategy from "passport-local";
 import { User } from "./models/user.model.js";
-
+import { DB_NAME } from "./constants.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -26,7 +27,20 @@ app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
 
+const store = MongoStore.create({
+  mongoUrl: `${process.env.MONGODB_URI}/${DB_NAME}`,
+  crypto: {
+    secret: "f3!@9g$2Kls8*vnQx1#Wz7Jp^kishan@4Nm",
+  },
+  touchAfter: 24 * 3600,
+});
+
+store.on("error", () => {
+  console.log("Error in mongo session store", err);
+});
+
 const sessionOption = {
+  store,
   secret: "f3!@9g$2Kls8*vnQx1#Wz7Jp^kishan@4Nm",
   resave: false,
   saveUninitialized: true,
@@ -61,24 +75,13 @@ import reviewsRouter from "./routes/reviews.route.js";
 import userRouter from "./routes/user.route.js";
 
 //All routes
-app.get("/", (req, res) => {
-  return res.send("hi hello");
-});
-
-app.get("/demouser", async (req, res) => {
-  let fakeUser = new User({
-    email: "kishanchauhan2006.25@gmail.com",
-    username: "kishan",
-  });
-  let registerUser = await User.register(fakeUser, "helloUser");
-  res.send(registerUser);
-});
 
 app.use("/listings", listingsRouter);
 app.use("/listings/:id/reviews", reviewsRouter);
 app.use("/", userRouter);
 
 app.all(/.*/, (req, res, next) => {
+  console.warn(`404 Not Found: ${req.method} ${req.originalUrl}`);
   return next(new ExpressError(404, "Page not found"));
 });
 
@@ -91,6 +94,3 @@ app.use((err, req, res, next) => {
 });
 
 export { app };
-
-// login
-// singup

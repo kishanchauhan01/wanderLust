@@ -16,7 +16,7 @@ const addReview = wrapAsync(async (req, res) => {
       req.flash("error", "Review is not added, try again");
     }
   }
-  console.log(newReview);
+  // console.log(newReview);
   return res.redirect(`/listings/${listing._id}`);
 });
 
