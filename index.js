@@ -5,8 +5,8 @@ import connectDB from "./db/connectDB.js";
 
 connectDB()
   .then(() => {
-    app.listen(8080, () => {
-      console.log("app is listing on http://localhost:8080");
+    app.listen(process.env.PORT, () => {
+      console.log(`app is listing on port: ${process.env.PORT}`);
     });
   })
   .catch((err) => {
