@@ -70,6 +70,9 @@ app.use((req, res, next) => {
 });
 
 //Routes import
+app.get("/", (req, res) => {
+  res.redirect("/listings");
+});
 import listingsRouter from "./routes/listing.route.js";
 import reviewsRouter from "./routes/reviews.route.js";
 import userRouter from "./routes/user.route.js";
