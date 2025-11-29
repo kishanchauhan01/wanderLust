@@ -12,6 +12,7 @@ import passport from "passport";
 import LocalStrategy from "passport-local";
 import { User } from "./models/user.model.js";
 import { DB_NAME } from "./constants.js";
+import { Listing } from "./models/listing.model.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -73,6 +74,19 @@ app.use((req, res, next) => {
 app.get("/", (req, res) => {
   res.redirect("/listings");
 });
+
+app.get("/api/v1/allListings", async (req, res) => {
+  const allListings = await Listing.find({});
+  return res.status(200).json({
+    status: "success",
+    data: {
+      allListings,
+    },
+  });
+});
+
+
+
 import listingsRouter from "./routes/listing.route.js";
 import reviewsRouter from "./routes/reviews.route.js";
 import userRouter from "./routes/user.route.js";
